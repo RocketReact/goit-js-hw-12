@@ -41,7 +41,7 @@ input:active {
   flex-wrap: wrap;
   gap: 24px;
   justify-content: center;
-  margin-bottom: 36px;
+  margin-bottom: 32px;
 }
 .gallery * {
   color: #2e2f42;
@@ -127,4 +127,14 @@ span {
 .large-img {
   max-width: 100%;
   max-height: 100%;
+}
+
+/* TODO load-more-btn*/
+.container-js-load-more-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.js-load-more-btn {
+  display: none;
 }

@@ -53,4 +53,10 @@ function hideLoader() {
   }
 }
 
-export { createGallery, clearGallery, showLoader, hideLoader };
+const btnLoadMore = document.querySelector(".js-load-more-btn");
+
+const showLoadMoreButton = () => btnLoadMore.style.display = "block";
+const hideLoadMoreButton = () => btnLoadMore.style.display = "none";
+
+
+export { createGallery, clearGallery, showLoader, hideLoader, showLoadMoreButton, hideLoadMoreButton };

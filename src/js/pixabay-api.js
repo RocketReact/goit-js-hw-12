@@ -1,7 +1,7 @@
 import axios from "axios";
 
 //TODO get array img axios API pixabay
-export default async function getImagesByQuery(query) {
+export default async function getImagesByQuery(query, page) {
   const params = new URLSearchParams({
     key: "51145498-f51992c20e23a6f6f425bd97f",
     q: query,
@@ -12,7 +12,7 @@ export default async function getImagesByQuery(query) {
     safesearch: "true",
     per_page: 9,
   });
-  const url = `https://pixabay.com/api/?${params}`;
+  const url = `https://pixabay.com/api/?${params}&${page}`;
   return await axios
     .get(url)
     .then((response) => {

@@ -12,7 +12,7 @@ export default async function getImagesByQuery(query, page=0) {
     max_height: 200,
     safesearch: "true",
     per_page: 15,
-    page: page+1
+    page: page+1,
   });
 
 

@@ -75,6 +75,7 @@ async function getImages(currentPage) {
             if (lastInputValue === inputValue) {
                 currentPage++
                 const images = await getImages(currentPage)
+                const totalPages = images.length
 
                 if (images.length > 0) {
                     createGallery(images);

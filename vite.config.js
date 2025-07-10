@@ -36,6 +36,7 @@ export default defineConfig(({ command }) => {
         },
       },
       outDir: '../dist',
+      assetsDir: 'assets',
       emptyOutDir: true,
     },
     plugins: [

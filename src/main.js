@@ -13,18 +13,26 @@ import "izitoast/dist/css/iziToast.min.css";
 const formSubmit = document.querySelector(".form");
 
 let inputValue = "";
+let lastInputValue = '';
+let currentPage = 0;
 
 //TODO create gallery => submit trigger
 formSubmit.addEventListener("submit", async function (e) {
     e.preventDefault();
-    inputValue = formSubmit.elements["search-text"].value;
+    hideLoadMoreButton()
+    currentPage = 0;
+    inputValue = formSubmit.elements["search-text"].value.trim();
+    lastInputValue = inputValue;
     clearGallery();
-    const images = await getImages();
+    const images = await getImages(currentPage);
     createGallery(images);
+    if (images.length >= 1) {
+        showLoadMoreButton()
+    }
 });
 
 //TODO get images by input value, show iziToast messages
-async function getImages() {
+async function getImages(currentPage) {
     const iziToastDefaults = {
         position: "topRight",
         timeout: 4000,
@@ -36,7 +44,7 @@ async function getImages() {
     };
     try {
         showLoader();
-        const imagesArr = await getImagesByQuery(inputValue);
+        const imagesArr = await getImagesByQuery(inputValue, currentPage);
 
         if (imagesArr.length === 0) {
             iziToast.warning({
@@ -60,3 +68,21 @@ async function getImages() {
         hideLoader();
     }
 }
+
+    const btnLoadMoreButton = document.querySelector(".js-load-more-btn");
+
+        btnLoadMoreButton.addEventListener("click", async function () {
+            if (lastInputValue === inputValue) {
+                currentPage++
+                const images = await getImages(currentPage)
+
+                if (images.length > 0) {
+                    createGallery(images);
+                } else {
+                    hideLoadMoreButton();
+                }
+            }
+          })
+
+
+

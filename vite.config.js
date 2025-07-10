@@ -6,7 +6,7 @@ import SortCss from 'postcss-sort-media-queries';
 
 export default defineConfig(({ command }) => {
   return {
-    // Убираем base отсюда, так как передаем через --base в команде build
+    base: './',
     define: {
       [command === 'serve' ? 'global' : '_global']: {},
     },

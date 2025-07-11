@@ -37,6 +37,7 @@ formSubmit.addEventListener('submit', async function (e) {
     });
     return;
   }
+
   inputValue = formSubmit.elements['search-text'].value.trim();
 
   lastInputValue = inputValue;
@@ -44,8 +45,14 @@ formSubmit.addEventListener('submit', async function (e) {
   clearGallery();
   const imagesObj = await getImages(currentPage);
   const images = imagesObj.hits;
-
   createGallery(images);
+  if (images.length < 15) {
+    iziToast.warning({
+      message: "We are sorry, but you've reached the end of search results",
+      color: 'red',
+      ...iziToastDefaults,
+    });
+  }
   if (images.length >= 15) {
     showLoadMoreButton();
   }

@@ -11,7 +11,6 @@ const gallery = document.querySelector('.gallery');
 //TODO create and add gallery to DOM
 function createGallery(hits) {
   let markup = '';
-  console.log(hits);
   hits?.forEach(image => {
     markup += `<li> 
       <a href= "${image.largeImageURL}" class="large-img">

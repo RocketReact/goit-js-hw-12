@@ -97,16 +97,13 @@ btnLoadMoreButton.addEventListener('click', async function () {
     if (currentPage >= availablePages || availableImg < 15) {
       hideLoadMoreButton();
       iziToast.warning({
-        message:
-          'Sorry, there are no images matching <br> your search query. Please try again!',
+        message: "We are sorry, but you've reached the end of search results",
         color: 'red',
         ...iziToastDefaults,
       });
     }
 
     const imgArr = imagesObject.hits;
-    console.log(imagesObject.totalHits);
-
     if (imgArr?.length > 0) {
       createGallery(imgArr);
       smoothScroll();

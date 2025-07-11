@@ -16,16 +16,14 @@ export default async function getImagesByQuery(query, page) {
 
   const url = `https://pixabay.com/api/?${params}`;
 
-  return await axios
-    .get(url)
-    .then(response => {
-      return {
-        hits: response.data.hits,
-        totalHits: response.data.totalHits,
-      };
-    })
-    .catch(error => {
-      console.error('Ошибка', error);
-      return [];
-    });
+  try {
+    const response = await axios.get(url);
+    return {
+      hits: response.data.hits,
+      totalHits: response.data.totalHits,
+    };
+  } catch (error) {
+    console.error('Ошибка', error);
+    return [];
+  }
 }

@@ -44,6 +44,7 @@ formSubmit.addEventListener('submit', async function (e) {
   clearGallery();
   const imagesObj = await getImages(currentPage);
   const images = imagesObj.hits;
+
   createGallery(images);
   if (images.length >= 15) {
     showLoadMoreButton();

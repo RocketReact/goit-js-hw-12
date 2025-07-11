@@ -51,11 +51,15 @@ formSubmit.addEventListener("submit", async function (e) {
 });
 
 //TODO get images by input value, show iziToast messages
+let isLoading = false;
 async function getImages(currentPage) {
 
-
+    if (isLoading) {
+        return []
+    }
+    isLoading = true;
+    showLoader();
     try {
-        showLoader();
         const getObjFromAPI = await getImagesByQuery(inputValue, currentPage);
         if (getObjFromAPI.hits.length === 0) {
             iziToast.warning({
@@ -77,6 +81,7 @@ async function getImages(currentPage) {
         return [];
     } finally {
         hideLoader();
+        isLoading = false;
     }
 }
 

@@ -9,10 +9,10 @@ const lightbox = new SimpleLightbox(".gallery a", {
 const gallery = document.querySelector(".gallery");
 
 //TODO create and add gallery to DOM
-function createGallery(images) {
+function createGallery(hits) {
   let markup = "";
 
-  images.forEach((image) => {
+  hits?.forEach((image) => {
     markup += `<li> 
       <a href= ${image.largeImageURL} class="large-img">
        <img src=${image.webformatURL} class="small-img" alt="${image.tags}">

@@ -14,39 +14,50 @@ const formSubmit = document.querySelector(".form");
 
 let inputValue = "";
 let lastInputValue = '';
-let currentPage = 0;
+let currentPage = 1;
+const iziToastDefaults = {
+    position: "topRight",
+    timeout: 4000,
+    close: true,
+    progressBar: true,
+    icon: "fas fa-check",
+    closeOnClick: false,
+    pauseOnHover: true,
+};
 
 //TODO create gallery => submit trigger
 formSubmit.addEventListener("submit", async function (e) {
     e.preventDefault();
     hideLoadMoreButton()
-    currentPage = 0;
+    if (formSubmit.elements["search-text"].value.trim() === '') {
+        iziToast.warning({
+            message:
+                "Input value can't be empty!",
+            color: "red",
+            ...iziToastDefaults,
+        });
+        return;
+    }
     inputValue = formSubmit.elements["search-text"].value.trim();
+
     lastInputValue = inputValue;
     clearGallery();
-    const images = await getImages(currentPage);
+    const imagesObj = await getImages(currentPage);
+    const images = imagesObj.hits
     createGallery(images);
-    if (images.length >= 1) {
+    if (images.length >= 15) {
         showLoadMoreButton()
     }
 });
 
 //TODO get images by input value, show iziToast messages
 async function getImages(currentPage) {
-    const iziToastDefaults = {
-        position: "topRight",
-        timeout: 4000,
-        close: true,
-        progressBar: true,
-        icon: "fas fa-check",
-        closeOnClick: false,
-        pauseOnHover: true,
-    };
+
+
     try {
         showLoader();
-        const imagesArr = await getImagesByQuery(inputValue, currentPage);
-
-        if (imagesArr.length === 0) {
+        const getObjFromAPI = await getImagesByQuery(inputValue, currentPage);
+        if (getObjFromAPI.hits.length === 0) {
             iziToast.warning({
                 message:
                     "Sorry, there are no images matching <br> your search query. Please try again!",
@@ -56,7 +67,7 @@ async function getImages(currentPage) {
 
             return [];
         }
-        return imagesArr;
+        return getObjFromAPI;
     } catch (error) {
         iziToast.error({
             message: `Oops, something went wrong! ${error}`,
@@ -74,11 +85,26 @@ async function getImages(currentPage) {
         btnLoadMoreButton.addEventListener("click", async function () {
             if (lastInputValue === inputValue) {
                 currentPage++
-                const images = await getImages(currentPage)
-                const totalPages = images.length
+                const imagesObject = await getImages(currentPage)
 
-                if (images.length > 0) {
-                    createGallery(images);
+                const availableImg = imagesObject.totalHits;
+
+                const availablePages = Math.ceil(availableImg/15);
+                const loadedImages = currentPage * 15
+                console.log(availableImg.length)
+                if (loadedImages>= availablePages ||availableImg.length<15) {
+                    hideLoadMoreButton()
+                    iziToast.warning({
+                        message:
+                            "Sorry, there are no images matching <br> your search query. Please try again!",
+                        color: "red",
+                        ...iziToastDefaults,
+                    });
+                }
+
+                const imgArr = imagesObject.hits
+                if (imgArr?.length > 0) {
+                    createGallery(imgArr);
                 } else {
                     hideLoadMoreButton();
                 }

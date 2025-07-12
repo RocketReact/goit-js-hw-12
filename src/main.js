@@ -45,16 +45,28 @@ formSubmit.addEventListener('submit', async function (e) {
   clearGallery();
   const imagesObj = await getImages(currentPage);
   const images = imagesObj.hits;
+
+  if (!images || !Array.isArray(images) || images.length === 0) {
+    iziToast.warning({
+      message:
+        'Sorry, there are no images matching <br> your search query. Please try again!',
+      color: 'red',
+      ...iziToastDefaults,
+    });
+    return;
+  }
+
   createGallery(images);
-  if (images.length < 15) {
+  if (images.length >= 15) {
+    showLoadMoreButton();
+  }
+
+  if (images && images.length < 15) {
     iziToast.warning({
       message: "We are sorry, but you've reached the end of search results",
       color: 'red',
       ...iziToastDefaults,
     });
-  }
-  if (images.length >= 15) {
-    showLoadMoreButton();
   }
 });
 
@@ -62,21 +74,16 @@ formSubmit.addEventListener('submit', async function (e) {
 let isLoading = false;
 async function getImages(currentPage) {
   if (isLoading) {
-    return [];
+    return { hits: [] }; // объект с пустым массивом
   }
   isLoading = true;
   showLoader();
   try {
     const getObjFromAPI = await getImagesByQuery(inputValue, currentPage);
-    if (getObjFromAPI.hits.length === 0) {
-      iziToast.warning({
-        message:
-          'Sorry, there are no images matching <br> your search query. Please try again!',
-        color: 'red',
-        ...iziToastDefaults,
-      });
+    const hits = getObjFromAPI.hits;
 
-      return [];
+    if (!hits || !Array.isArray(hits) || hits.length === 0) {
+      return { hits: [] };
     }
     return getObjFromAPI;
   } catch (error) {
@@ -85,7 +92,7 @@ async function getImages(currentPage) {
       color: 'red',
       ...iziToastDefaults,
     });
-    return [];
+    return { hits: [] }; // объект с пустым массивом
   } finally {
     hideLoader();
     isLoading = false;
@@ -99,7 +106,7 @@ btnLoadMoreButton.addEventListener('click', async function () {
     currentPage++;
 
     const imagesObject = await getImages(currentPage);
-    const availableImg = imagesObject.totalHits;
+    const availableImg = imagesObject.totalHits || 0;
     const availablePages = Math.ceil(availableImg / 15);
 
     if (currentPage >= availablePages || availableImg < 15) {
@@ -111,7 +118,7 @@ btnLoadMoreButton.addEventListener('click', async function () {
       });
     }
 
-    const imgArr = imagesObject.hits;
+    const imgArr = imagesObject.hits || [];
     if (imgArr?.length > 0) {
       createGallery(imgArr);
       smoothScroll();

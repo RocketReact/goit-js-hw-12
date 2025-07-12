@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { hideLoader } from './render-functions.js';
 
 //TODO get array img axios API pixabay
 export default async function getImagesByQuery(query, page) {

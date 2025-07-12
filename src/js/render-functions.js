@@ -31,7 +31,6 @@ function createGallery(hits) {
 }
 //TODO clear gallery through innerHTML
 function clearGallery() {
-  const gallery = document.querySelector('.gallery'); // или ваш селектор
   if (gallery) {
     gallery.innerHTML = '';
   }
